@@ -123,7 +123,7 @@ app.use((req, res) => {
   });
 });
 
-app.use((err, req, res, next) => {
+ app.use((err, req, res, next) => {
   console.error('Ошибка сервера:', err.stack);
   
   const isDevelopment = process.env.NODE_ENV === 'development';
