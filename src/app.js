@@ -52,6 +52,25 @@ app.post('/api/users', (req, res) => {
   res.status(201).json(newUser);
 });
 
+app.get('/api/stats', (req, res) => {
+  const stats = {
+    server: {
+      uptime: process.uptime(),
+      memory: process.memoryUsage(),
+      nodeVersion: process.version,
+      platform: process.platform
+    },
+    application: {
+      name: 'CI/CD Demo Application',
+      version: '1.0.0',
+      environment: process.env.NODE_ENV || 'development'
+    },
+    timestamp: new Date().toISOString()
+  };
+  
+  res.json(stats);
+});
+
 app.get('/api/calculate/:operation/:a/:b', (req, res) => {
   const { operation, a, b } = req.params;
   const numA = parseFloat(a);

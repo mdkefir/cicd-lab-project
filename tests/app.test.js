@@ -39,6 +39,26 @@ describe('CI/CD Demo Application', () => {
     });
   });
 
+  describe('GET /api/stats', () => {
+    it('должен возвращать статистику сервера', async () => {
+      const response = await request(app).get('/api/stats');
+      
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('server');
+      expect(response.body).toHaveProperty('application');
+      expect(response.body).toHaveProperty('timestamp');
+      
+      expect(response.body.server).toHaveProperty('uptime');
+      expect(response.body.server).toHaveProperty('memory');
+      expect(response.body.server).toHaveProperty('nodeVersion');
+      expect(response.body.server).toHaveProperty('platform');
+      
+      expect(response.body.application).toHaveProperty('name', 'CI/CD Demo Application');
+      expect(response.body.application).toHaveProperty('version', '1.0.0');
+      expect(response.body.application).toHaveProperty('environment');
+    });
+  });
+
   describe('POST /api/users', () => {
     it('должен создавать нового пользователя', async () => {
       const newUser = {

@@ -12,6 +12,7 @@
 - **GET /health** - проверка состояния
 - **GET /api/users** - получение списка пользователей
 - **POST /api/users** - создание нового пользователя
+- **GET /api/stats** - статистика сервера и приложения
 - **GET /api/calculate/:operation/:a/:b** - калькулятор (add, subtract, multiply, divide)
 
 ## Локальная разработка
