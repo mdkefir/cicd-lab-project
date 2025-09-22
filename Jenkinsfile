@@ -7,10 +7,6 @@ pipeline {
         DOCKER_IMAGE = 'cicd-demo-app'
     }
     
-    tools {
-        nodejs "${NODE_VERSION}"
-    }
-    
     stages {
         stage('Checkout') {
             steps {
@@ -89,7 +85,6 @@ pipeline {
     post {
         always {
             echo 'Pipeline завершен'
-            cleanWs()
         }
         success {
             echo 'Pipeline выполнен успешно!'
