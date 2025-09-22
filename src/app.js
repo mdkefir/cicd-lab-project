@@ -123,6 +123,19 @@ app.use((req, res) => {
   });
 });
 
+app.use((err, req, res, next) => {
+  console.error('Ошибка сервера:', err.stack);
+  
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  
+  res.status(err.status || 500).json({
+    error: 'Внутренняя ошибка сервера',
+    message: isDevelopment ? err.message : 'Что-то пошло не так',
+    ...(isDevelopment && { stack: err.stack }),
+    timestamp: new Date().toISOString()
+  });
+});
+
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
