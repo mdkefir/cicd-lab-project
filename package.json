@@ -1,0 +1,33 @@
+{
+  "name": "cicd-lab-project",
+  "version": "1.0.0",
+  "description": "CI/CD лабораторная работа с Jenkins",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "build": "echo 'Building application...' && npm test",
+    "lint": "echo 'Linting code...'",
+    "deploy": "echo 'Deploying application...'"
+  },
+  "keywords": ["nodejs", "express", "cicd", "jenkins"],
+  "author": "DevOps Student",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.3"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "coverageReporters": ["text", "lcov", "html"]
+  }
+}
