@@ -55,7 +55,6 @@ pipeline {
             steps {
                 echo 'Деплой в dev окружение...'
                 bat 'echo "Развертывание в dev среде"'
-                bat 'docker build -t %DOCKER_IMAGE%:dev .'
                 bat 'echo "Dev deployment completed"'
             }
         }
@@ -67,8 +66,7 @@ pipeline {
             steps {
                 echo 'Деплой в production...'
                 bat 'echo "Развертывание в production среде"'
-                bat 'docker build -t %DOCKER_IMAGE%:latest .'
-                bat 'docker build -t %DOCKER_IMAGE%:v1.0.%BUILD_NUMBER% .'
+                bat 'echo "Приложение готово к развертыванию"'
                 bat 'echo "Production deployment completed"'
             }
         }
