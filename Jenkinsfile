@@ -36,15 +36,7 @@ pipeline {
             }
             post {
                 always {
-                    publishTestResults testResultsPattern: 'coverage/lcov.info'
-                    publishHTML([
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'coverage',
-                        reportFiles: 'index.html',
-                        reportName: 'Coverage Report'
-                    ])
+                    echo 'Тесты завершены. Отчеты доступны в папке coverage/'
                 }
             }
         }
