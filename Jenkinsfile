@@ -4,7 +4,6 @@ pipeline {
     environment {
         NODE_VERSION = '18'
         APP_NAME = 'cicd-lab-project'
-        DOCKER_IMAGE = 'cicd-demo-app'
     }
     
     stages {
@@ -55,6 +54,14 @@ pipeline {
             steps {
                 echo 'Деплой в dev окружение...'
                 bat 'echo "Развертывание в dev среде"'
+                bat 'echo "Остановка предыдущего процесса..."'
+                bat 'taskkill /F /IM node.exe 2>nul || echo "Нет запущенных процессов"'
+                bat 'set NODE_ENV=development'
+                bat 'echo "Запуск приложения на порту 3001..."'
+                bat 'start /B node src/app.js'
+                bat 'timeout /t 3 /nobreak >nul'
+                bat 'echo "Приложение запущено! Проверка доступности..."'
+                bat 'curl -s http://localhost:3001/health || echo "Приложение еще запускается..."'
                 bat 'echo "Dev deployment completed"'
             }
         }
