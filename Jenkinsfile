@@ -71,9 +71,16 @@ pipeline {
                 branch 'main'
             }
             steps {
-                echo 'Деплой в production...'
-                bat 'echo "Развертывание в production среде"'
-                bat 'echo "Приложение готово к развертыванию"'
+               echo 'Деплой в prod окружение...'
+                bat 'echo "Развертывание в prod среде"'
+                bat 'echo "Остановка предыдущего процесса..."'
+                bat 'taskkill /F /IM node.exe 2>nul || echo "Нет запущенных процессов"'
+                bat 'set NODE_ENV=production'
+                bat 'echo "Запуск приложения на порту 3000..."'
+                bat 'start /B node src/app.js'
+                bat 'timeout /t 3 /nobreak >nul'
+                bat 'echo "Приложение запущено! Проверка доступности..."'
+                bat 'curl -s http://localhost:3000/health || echo "Приложение еще запускается..."'
                 bat 'echo "Production deployment completed"'
             }
         }
