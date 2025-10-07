@@ -54,12 +54,20 @@ pipeline {
             when { branch 'dev' }
             steps {
                 echo 'деплой в dev'
-                // мягко освобождаем порт
-                bat 'for /f "tokens=5" %%p in (\'netstat -ano ^| find ":%PORT_DEV%" ^| find "LISTENING"\') do taskkill /F /PID %%p 2>nul || echo "нет процесса на %PORT_DEV%"'
-                // старт с окружением и корректным редиректом
-                bat 'set "NODE_ENV=development" && set "PORT=%PORT_DEV%" && start "" /B cmd /c "node src\\app.js >> app-dev.log 2>&1"'
+                bat '''
+                for /F "tokens=5" %%p in ('netstat -ano ^| find ":%PORT_DEV%" ^| find "LISTENING"') do (
+                    taskkill /F /PID %%p 2>nul || echo нет процесса на %PORT_DEV%
+                )
+                '''
+                bat '''
+                set "NODE_ENV=development"
+                set "PORT=%PORT_DEV%"
+                start "" /B cmd /c "node src\\app.js >> app-dev.log 2>&1"
+                '''
                 bat 'powershell -Command "Start-Sleep -Seconds 3"'
-                bat 'C:\\Windows\\System32\\curl.exe -sS http://localhost:%PORT_DEV%/health || echo "приложение еще запускается"'
+                bat '''
+                C:\\Windows\\System32\\curl.exe -sS http://localhost:%PORT_DEV%/health || echo приложение еще запускается
+                '''
                 echo 'dev deployment completed'
             }
         }
@@ -68,10 +76,20 @@ pipeline {
             when { branch 'main' }
             steps {
                 echo 'деплой в prod'
-                bat 'for /f "tokens=5" %%p in (\'netstat -ano ^| find ":%PORT_PROD%" ^| find "LISTENING"\') do taskkill /F /PID %%p 2>nul || echo "нет процесса на %PORT_PROD%"'
-                bat 'set "NODE_ENV=production" && set "PORT=%PORT_PROD%" && start "" /B cmd /c "node src\\app.js >> app-prod.log 2>&1"'
+                bat '''
+                for /F "tokens=5" %%p in ('netstat -ano ^| find ":%PORT_PROD%" ^| find "LISTENING"') do (
+                    taskkill /F /PID %%p 2>nul || echo нет процесса на %PORT_PROD%
+                )
+                '''
+                bat '''
+                set "NODE_ENV=production"
+                set "PORT=%PORT_PROD%"
+                start "" /B cmd /c "node src\\app.js >> app-prod.log 2>&1"
+                '''
                 bat 'powershell -Command "Start-Sleep -Seconds 3"'
-                bat 'C:\\Windows\\System32\\curl.exe -sS http://localhost:%PORT_PROD%/health || echo "приложение еще запускается"'
+                bat '''
+                C:\\Windows\\System32\\curl.exe -sS http://localhost:%PORT_PROD%/health || echo приложение еще запускается
+                '''
                 echo 'production deployment completed'
             }
         }
