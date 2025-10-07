@@ -53,11 +53,13 @@ pipeline {
             steps {
                 echo 'деплой в dev'
                 bat '''
-                for /F "tokens=5" %%%%p in ('netstat -ano ^| find ":%PORT_DEV%" ^| find "LISTENING"') do (
-                    taskkill /F /PID %%%%p 2>nul || echo нет процесса на %PORT_DEV%
+                chcp 65001 >nul
+                for /F "tokens=5" %%p in ('netstat -ano ^| find ":%PORT_PROD%" ^| find "LISTENING"') do (
+                    taskkill /F /PID %%p 2>nul || echo нет процесса на %PORT_PROD%
                 )
                 exit /b 0
                 '''
+
                 bat '''
                 set "NODE_ENV=development"
                 set "PORT=%PORT_DEV%"
@@ -76,11 +78,13 @@ pipeline {
             steps {
                 echo 'деплой в prod'
                 bat '''
-                for /F "tokens=5" %%%%p in ('netstat -ano ^| find ":%PORT_PROD%" ^| find "LISTENING"') do (
-                    taskkill /F /PID %%%%p 2>nul || echo нет процесса на %PORT_PROD%
+                chcp 65001 >nul
+                for /F "tokens=5" %%p in ('netstat -ano ^| find ":%PORT_DEV%" ^| find "LISTENING"') do (
+                    taskkill /F /PID %%p 2>nul || echo нет процесса на %PORT_DEV%
                 )
                 exit /b 0
                 '''
+
                 bat '''
                 set "NODE_ENV=production"
                 set "PORT=%PORT_PROD%"
