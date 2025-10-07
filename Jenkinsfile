@@ -4,8 +4,9 @@ pipeline {
     environment {
         NODE_VERSION = '18'
         APP_NAME = 'cicd-lab-project'
+        PORT_DEV = '3001'
+        PORT_PROD = '3000'
     }
-    
     stages {
         stage('Checkout') {
             steps {
@@ -47,41 +48,31 @@ pipeline {
             }
         }
         
+
+
         stage('Deploy to Dev') {
-            when {
-                branch 'dev'
-            }
+            when { branch 'dev' }
             steps {
-                echo 'Деплой в dev окружение...'
-                bat 'echo "Развертывание в dev среде"'
-                bat 'echo "Остановка предыдущего процесса..."'
-                bat 'taskkill /F /IM node.exe 2>nul || echo "Нет запущенных процессов"'
-                bat 'set NODE_ENV=development'
-                bat 'echo "Запуск приложения на порту 3001..."'
-                bat 'node src/app.js > app.log 2>&1 &'
+                echo 'деплой в dev'
+                // мягко освобождаем порт
+                bat 'for /f "tokens=5" %%p in (\'netstat -ano ^| find ":%PORT_DEV%" ^| find "LISTENING"\') do taskkill /F /PID %%p 2>nul || echo "нет процесса на %PORT_DEV%"'
+                // старт с окружением и корректным редиректом
+                bat 'set "NODE_ENV=development" && set "PORT=%PORT_DEV%" && start "" /B cmd /c "node src\\app.js >> app-dev.log 2>&1"'
                 bat 'powershell -Command "Start-Sleep -Seconds 3"'
-                bat 'echo "Приложение запущено! Проверка доступности..."'
-                bat 'curl -s http://localhost:3001/health || echo "Приложение еще запускается..."'
-                bat 'echo "Dev deployment completed"'
+                bat 'C:\\Windows\\System32\\curl.exe -sS http://localhost:%PORT_DEV%/health || echo "приложение еще запускается"'
+                echo 'dev deployment completed'
             }
         }
-        
+
         stage('Deploy to Production') {
-            when {
-                branch 'main'
-            }
+            when { branch 'main' }
             steps {
-               echo 'Деплой в prod окружение...'
-                bat 'echo "Развертывание в prod среде"'
-                bat 'echo "Остановка предыдущего процесса..."'
-                bat 'taskkill /F /IM node.exe 2>nul || echo "Нет запущенных процессов"'
-                bat 'set NODE_ENV=production'
-                bat 'echo "Запуск приложения на порту 3000..."'
-                bat 'node src/app.js > app.log 2>&1 &'
+                echo 'деплой в prod'
+                bat 'for /f "tokens=5" %%p in (\'netstat -ano ^| find ":%PORT_PROD%" ^| find "LISTENING"\') do taskkill /F /PID %%p 2>nul || echo "нет процесса на %PORT_PROD%"'
+                bat 'set "NODE_ENV=production" && set "PORT=%PORT_PROD%" && start "" /B cmd /c "node src\\app.js >> app-prod.log 2>&1"'
                 bat 'powershell -Command "Start-Sleep -Seconds 3"'
-                bat 'echo "Приложение запущено! Проверка доступности..."'
-                bat 'curl -s http://localhost:3000/health || echo "Приложение еще запускается..."'
-                bat 'echo "Production deployment completed"'
+                bat 'C:\\Windows\\System32\\curl.exe -sS http://localhost:%PORT_PROD%/health || echo "приложение еще запускается"'
+                echo 'production deployment completed'
             }
         }
     }
