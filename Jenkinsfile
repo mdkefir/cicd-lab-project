@@ -81,11 +81,13 @@ pipeline {
                 echo 'деплой в prod'
                 bat '''
                 chcp 65001 >nul
-                for /F "tokens=5" %%p in ('netstat -ano ^| find ":%PORT_DEV%" ^| find "LISTENING"') do (
-                    taskkill /F /PID %%p 2>nul || echo нет процесса на %PORT_DEV%
-                )
-                exit /b 0
+                setlocal
+                set "NODE_ENV=production"
+                set "PORT=%PORT_PROD%"
+                start "" /B cmd /C "node src\\app.js >> app-prod.log 2>&1"
+                endlocal
                 '''
+
 
                 bat '''
                 set "NODE_ENV=production"
