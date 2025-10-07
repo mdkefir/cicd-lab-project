@@ -60,13 +60,6 @@ pipeline {
                 start "" /B cmd /C "node src\\app.js >> app-dev.log 2>&1"
                 endlocal
                 '''
-
-
-                bat '''
-                set "NODE_ENV=development"
-                set "PORT=%PORT_DEV%"
-                start "" /B cmd /c "node src\\app.js >> app-dev.log 2>&1"
-                '''
                 bat 'powershell -Command "Start-Sleep -Seconds 3"'
                 bat '''
                 C:\\Windows\\System32\\curl.exe -sS http://localhost:%PORT_DEV%/health || echo приложение еще запускается
@@ -86,13 +79,6 @@ pipeline {
                 set "PORT=%PORT_PROD%"
                 start "" /B cmd /C "node src\\app.js >> app-prod.log 2>&1"
                 endlocal
-                '''
-
-
-                bat '''
-                set "NODE_ENV=production"
-                set "PORT=%PORT_PROD%"
-                start "" /B cmd /c "node src\\app.js >> app-prod.log 2>&1"
                 '''
                 bat 'powershell -Command "Start-Sleep -Seconds 3"'
                 bat '''
