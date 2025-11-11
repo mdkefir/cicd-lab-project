@@ -5,7 +5,7 @@ pipeline {
         NODE_VERSION = '18'
         APP_NAME = 'cicd-lab-project'
         PORT_DEV = '3001'
-        PORT_PROD = '3000'
+        PORT_PROD = '3000' 
     }
     stages {
         stage('Checkout') {

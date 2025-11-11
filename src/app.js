@@ -9,7 +9,7 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.json({
-    message: 'CI/CD Demo Application',
+    message: 'CI/CD Demo Application v2',
     version: '1.0.0',
     status: 'running',
     timestamp: new Date().toISOString()
